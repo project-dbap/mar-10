@@ -43,6 +43,7 @@
     --font-display: 'Cormorant Garamond', serif;
     --font-heading: 'Playfair Display', serif;
     --font-body: 'DM Sans', sans-serif;
+    --font-handwritten: 'Caveat', cursive;
   }
 }
 
@@ -115,6 +116,10 @@
 
 .font-body {
   font-family: var(--font-body);
+}
+
+.font-handwritten {
+  font-family: var(--font-handwritten);
 }
 
 /* Scrapbook card texture */

@@ -13,7 +13,6 @@ interface BillPage {
   emoji: string;
   subtitle?: string;
   entries: BillEntry[];
-  isClosing?: boolean;
 }
 
 const pages: BillPage[] = [
@@ -102,15 +101,66 @@ const tapeColors = [
   "bg-purple-300/50",
 ];
 
-const doodles = ["✿", "♡", "☆", "~", "✧", "◦", "❋", "∞"];
+// Margin doodles – SVG-style decorative elements scattered around the page
+const marginDoodles = [
+  { content: "♡", top: "15%", left: "2%", rotate: -12, size: "text-lg" },
+  { content: "✿", top: "35%", right: "2%", rotate: 20, size: "text-xl" },
+  { content: "☆", top: "60%", left: "1%", rotate: 8, size: "text-base" },
+  { content: "~❋~", bottom: "20%", right: "3%", rotate: -5, size: "text-sm" },
+  { content: "♡", top: "80%", left: "3%", rotate: 15, size: "text-base" },
+  { content: "✧", top: "45%", left: "2%", rotate: -20, size: "text-lg" },
+  { content: "🍕", bottom: "35%", right: "2%", rotate: 10, size: "text-base" },
+  { content: "∞", top: "25%", right: "3%", rotate: -8, size: "text-sm" },
+];
+
+// Rotating sets of doodles per page
+const getPageDoodles = (pageIndex: number) => {
+  const offset = pageIndex * 2;
+  return marginDoodles.filter((_, i) => (i + offset) % 3 !== 0).slice(0, 5);
+};
 
 const RestaurantScrapbook = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [zoomedPhoto, setZoomedPhoto] = useState<string | null>(null);
+  const [direction, setDirection] = useState(0);
   const page = pages[currentPage];
 
-  const nextPage = () => setCurrentPage((p) => Math.min(p + 1, pages.length - 1));
-  const prevPage = () => setCurrentPage((p) => Math.max(p - 1, 0));
+  const nextPage = () => {
+    if (currentPage < pages.length - 1) {
+      setDirection(1);
+      setCurrentPage((p) => p + 1);
+    }
+  };
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setDirection(-1);
+      setCurrentPage((p) => p - 1);
+    }
+  };
+
+  // 3D page-curl variants
+  const pageVariants = {
+    enter: (d: number) => ({
+      rotateY: d > 0 ? 90 : -90,
+      opacity: 0,
+      scale: 0.95,
+      transformOrigin: d > 0 ? "left center" : "right center",
+    }),
+    center: {
+      rotateY: 0,
+      opacity: 1,
+      scale: 1,
+      transformOrigin: "center center",
+    },
+    exit: (d: number) => ({
+      rotateY: d > 0 ? -90 : 90,
+      opacity: 0,
+      scale: 0.95,
+      transformOrigin: d > 0 ? "right center" : "left center",
+    }),
+  };
+
+  const doodles = getPageDoodles(currentPage);
 
   return (
     <section className="relative z-10 py-12 px-4 md:px-8 w-full overflow-y-auto">
@@ -123,19 +173,21 @@ const RestaurantScrapbook = () => {
         <h2 className="font-heading text-4xl md:text-5xl text-cream text-center mb-2">
           The Bill Collection 🧾
         </h2>
-        <p className="text-center text-muted-foreground font-display text-lg italic mb-8">
+        <p className="text-center text-muted-foreground font-handwritten text-2xl mb-8">
           Flip through our delicious memories
         </p>
 
         {/* Journal book */}
-        <div className="relative">
-          <AnimatePresence mode="wait">
+        <div className="relative" style={{ perspective: "1200px" }}>
+          <AnimatePresence custom={direction} mode="wait">
             <motion.div
               key={page.id}
-              initial={{ opacity: 0, rotateY: -6 }}
-              animate={{ opacity: 1, rotateY: 0 }}
-              exit={{ opacity: 0, rotateY: 6 }}
-              transition={{ duration: 0.35 }}
+              custom={direction}
+              variants={pageVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
               className="relative rounded-xl overflow-hidden"
               style={{
                 background: "linear-gradient(145deg, hsl(36 20% 14%) 0%, hsl(30 15% 11%) 50%, hsl(220 20% 10%) 100%)",
@@ -144,6 +196,25 @@ const RestaurantScrapbook = () => {
                 minHeight: "500px",
               }}
             >
+              {/* Kraft paper texture overlay */}
+              <div
+                className="absolute inset-0 pointer-events-none opacity-[0.04] rounded-xl"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+                  backgroundSize: "200px 200px",
+                  mixBlendMode: "overlay",
+                }}
+              />
+              {/* Secondary texture grain */}
+              <div
+                className="absolute inset-0 pointer-events-none opacity-[0.06] rounded-xl"
+                style={{
+                  backgroundImage: `radial-gradient(circle at 20% 30%, hsl(36 40% 30% / 0.15) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 70%, hsl(36 30% 25% / 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 50% 50%, hsl(30 20% 20% / 0.08) 0%, transparent 70%)`,
+                }}
+              />
+
               {/* Paper lines */}
               <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{
                 backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, hsl(36 30% 50%) 31px, hsl(36 30% 50%) 32px)",
@@ -152,104 +223,97 @@ const RestaurantScrapbook = () => {
               {/* Red margin */}
               <div className="absolute left-12 md:left-16 top-0 bottom-0 w-px opacity-10 pointer-events-none" style={{ background: "hsl(0 60% 50%)" }} />
 
+              {/* Margin doodles */}
+              {doodles.map((doodle, i) => (
+                <motion.span
+                  key={`${currentPage}-doodle-${i}`}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
+                  className={`absolute ${doodle.size} text-primary/15 select-none pointer-events-none font-handwritten`}
+                  style={{
+                    top: doodle.top,
+                    left: doodle.left,
+                    right: doodle.right,
+                    bottom: doodle.bottom,
+                    transform: `rotate(${doodle.rotate}deg)`,
+                  }}
+                >
+                  {doodle.content}
+                </motion.span>
+              ))}
+
               <div className="relative p-5 md:p-8">
                 {/* Page number */}
-                <div className="absolute top-4 right-5 text-muted-foreground/30 font-body text-xs">
+                <div className="absolute top-4 right-5 text-muted-foreground/30 font-handwritten text-sm">
                   pg {currentPage + 1} / {pages.length}
                 </div>
-                {/* Corner doodle */}
-                <span className="absolute top-4 left-5 text-primary/20 text-xl select-none">
-                  {doodles[currentPage % doodles.length]}
-                </span>
 
                 {/* Title */}
                 <div className="text-center mb-6 pt-2">
                   <span className="text-4xl mb-1 block">{page.emoji}</span>
-                  <h3 className="font-display text-3xl md:text-4xl text-cream italic">
+                  <h3 className="font-handwritten text-4xl md:text-5xl text-cream">
                     {page.title}
                   </h3>
                   {page.subtitle && (
-                    <p className="font-display text-sm text-primary/60 italic mt-1">
+                    <p className="font-handwritten text-lg text-primary/60 mt-1">
                       — {page.subtitle} —
                     </p>
                   )}
-                  <div className="text-primary/20 text-xs mt-2 select-none">~ ~ ~ ✿ ~ ~ ~</div>
+                  <div className="text-primary/20 text-xs mt-2 select-none font-handwritten">~ ~ ~ ✿ ~ ~ ~</div>
                 </div>
 
-                {/* Closing page */}
-                {page.isClosing ? (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="flex flex-col items-center justify-center py-16 gap-4"
-                  >
-                    <span className="text-6xl">🥰</span>
-                    <p className="font-display text-xl md:text-2xl text-cream/80 italic text-center max-w-md leading-relaxed">
-                      Not every beautiful meal came with a bill.
-                      <br />
-                      Some came with just us, some street food, and a whole lot of laughter.
-                    </p>
-                    <div className="flex gap-2 mt-4 text-2xl">
-                      <span>🍦</span><span>🥘</span><span>🧁</span><span>🍿</span><span>🫖</span>
-                    </div>
-                    <p className="text-muted-foreground/40 font-display text-sm italic mt-4">
-                      ...and the story keeps going ♡
-                    </p>
-                  </motion.div>
-                ) : (
-                  /* Bills grid — optimized for tall/thin bill photos */
-                  <div className="grid grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
-                    {page.entries.map((entry, ei) => {
-                      const tapeColor = tapeColors[(currentPage + ei) % tapeColors.length];
-                      const tilt = ((ei % 5) - 2) * 1.5;
+                {/* Bills grid */}
+                <div className="grid grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+                  {page.entries.map((entry, ei) => {
+                    const tapeColor = tapeColors[(currentPage + ei) % tapeColors.length];
+                    const tilt = ((ei % 5) - 2) * 1.5;
 
-                      return (
-                        <motion.div
-                          key={ei}
-                          initial={{ opacity: 0, y: 15, rotate: 0 }}
-                          animate={{ opacity: 1, y: 0, rotate: tilt }}
-                          whileHover={{ rotate: 0, scale: 1.05, zIndex: 20 }}
-                          transition={{ delay: ei * 0.04, duration: 0.3 }}
-                          className="relative group cursor-pointer"
-                          onClick={() => entry.photo && setZoomedPhoto(entry.photo)}
-                        >
-                          {/* Tape */}
-                          <div
-                            className={`absolute -top-1.5 left-1/2 -translate-x-1/2 w-10 h-3 ${tapeColor} rounded-sm z-10`}
-                            style={{ transform: `translateX(-50%) rotate(${-tilt * 0.3}deg)` }}
-                          />
+                    return (
+                      <motion.div
+                        key={ei}
+                        initial={{ opacity: 0, y: 15, rotate: 0 }}
+                        animate={{ opacity: 1, y: 0, rotate: tilt }}
+                        whileHover={{ rotate: 0, scale: 1.05, zIndex: 20 }}
+                        transition={{ delay: ei * 0.04, duration: 0.3 }}
+                        className="relative group cursor-pointer"
+                        onClick={() => entry.photo && setZoomedPhoto(entry.photo)}
+                      >
+                        {/* Tape */}
+                        <div
+                          className={`absolute -top-1.5 left-1/2 -translate-x-1/2 w-10 h-3 ${tapeColor} rounded-sm z-10`}
+                          style={{ transform: `translateX(-50%) rotate(${-tilt * 0.3}deg)` }}
+                        />
 
-                          {/* Bill photo */}
-                          <div className="w-full aspect-[2/3] rounded-sm overflow-hidden border border-border/20 shadow-md bg-secondary/30 relative">
-                            {entry.photo ? (
-                              <>
-                                <img src={entry.photo} alt="bill" className="w-full h-full object-cover" />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                  <ZoomIn className="w-5 h-5 text-white opacity-0 group-hover:opacity-80 transition-opacity" />
-                                </div>
-                              </>
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center">
-                                <span className="text-muted-foreground/30 text-xs font-body">📄</span>
+                        {/* Bill photo */}
+                        <div className="w-full aspect-[2/3] rounded-sm overflow-hidden border border-border/20 shadow-md bg-secondary/30 relative">
+                          {entry.photo ? (
+                            <>
+                              <img src={entry.photo} alt="bill" className="w-full h-full object-cover" />
+                              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                <ZoomIn className="w-5 h-5 text-white opacity-0 group-hover:opacity-80 transition-opacity" />
                               </div>
-                            )}
-                          </div>
-
-                          {/* Comment */}
-                          {entry.comment && (
-                            <p className="font-display text-[10px] md:text-xs text-cream/60 italic mt-1.5 leading-snug text-center px-0.5">
-                              "{entry.comment}"
-                            </p>
+                            </>
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <span className="text-muted-foreground/30 text-xs font-body">📄</span>
+                            </div>
                           )}
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                )}
+                        </div>
+
+                        {/* Comment */}
+                        {entry.comment && (
+                          <p className="font-handwritten text-sm md:text-base text-cream/60 mt-1.5 leading-snug text-center px-0.5">
+                            "{entry.comment}"
+                          </p>
+                        )}
+                      </motion.div>
+                    );
+                  })}
+                </div>
 
                 {/* Bottom flourish */}
-                <div className="text-center mt-6 text-primary/15 text-sm select-none font-display">
+                <div className="text-center mt-6 text-primary/15 text-sm select-none font-handwritten">
                   ── ♡ ──
                 </div>
               </div>
@@ -261,7 +325,7 @@ const RestaurantScrapbook = () => {
             <button
               onClick={prevPage}
               disabled={currentPage === 0}
-              className="flex items-center gap-1 text-sm font-display text-muted-foreground hover:text-cream disabled:opacity-20 disabled:cursor-default transition-colors"
+              className="flex items-center gap-1 text-sm font-handwritten text-lg text-muted-foreground hover:text-cream disabled:opacity-20 disabled:cursor-default transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
               prev
@@ -270,7 +334,10 @@ const RestaurantScrapbook = () => {
               {pages.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => setCurrentPage(i)}
+                  onClick={() => {
+                    setDirection(i > currentPage ? 1 : -1);
+                    setCurrentPage(i);
+                  }}
                   className={`w-2 h-2 rounded-full transition-all ${
                     i === currentPage ? "bg-primary w-4" : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
                   }`}
@@ -280,7 +347,7 @@ const RestaurantScrapbook = () => {
             <button
               onClick={nextPage}
               disabled={currentPage === pages.length - 1}
-              className="flex items-center gap-1 text-sm font-display text-muted-foreground hover:text-cream disabled:opacity-20 disabled:cursor-default transition-colors"
+              className="flex items-center gap-1 text-sm font-handwritten text-lg text-muted-foreground hover:text-cream disabled:opacity-20 disabled:cursor-default transition-colors"
             >
               next
               <ChevronRight className="w-4 h-4" />
