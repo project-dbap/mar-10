@@ -118,6 +118,10 @@
   font-family: var(--font-body);
 }
 
+.font-handwritten {
+  font-family: var(--font-handwritten);
+}
+
 /* Scrapbook card texture */
 .scrapbook-card {
   background: linear-gradient(135deg, hsl(220 40% 13%) 0%, hsl(220 35% 16%) 100%);
