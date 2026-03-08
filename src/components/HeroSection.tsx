@@ -45,9 +45,9 @@ const HeroSection = () => {
         className="absolute bottom-12 flex flex-col items-center gap-2"
       >
         <span className="text-muted-foreground text-sm font-body tracking-widest uppercase">
-          Scroll to explore
+          Swipe or press → to explore
         </span>
-        <ChevronDown className="w-5 h-5 text-gold animate-scroll-bounce" />
+        <ChevronDown className="w-5 h-5 text-gold animate-scroll-bounce rotate-[-90deg]" />
       </motion.div>
     </section>
   );
