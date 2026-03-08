@@ -84,7 +84,7 @@ const MathQuiz = () => {
     : wrongMessages[Math.floor(Math.random() * wrongMessages.length)];
 
   return (
-    <section className="relative z-10 py-20 px-4 md:px-8">
+    <section className="relative z-10 py-20 px-4 md:px-8 pb-28">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
