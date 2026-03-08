@@ -91,14 +91,6 @@ const pages: BillPage[] = [
       ...(i === 1 ? { comment: "Sunday ritual." } : {}),
     })),
   },
-  {
-    id: 8,
-    title: "& Many More…",
-    emoji: "✨",
-    subtitle: "Not every memory comes with a receipt",
-    isClosing: true,
-    entries: [],
-  },
 ];
 
 const tapeColors = [
