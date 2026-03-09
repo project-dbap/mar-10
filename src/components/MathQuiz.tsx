@@ -9,9 +9,9 @@ interface Question {
 }
 
 const questions: Question[] = [
-  { question: "What is 6 × 7?", options: ["36", "42", "48", "A billion"], correctIndex: 1 },
+  { question: "What is 23 × 7?", options: ["173", "181", "161", "I give up"], correctIndex: 2 },
   { question: "What is 81 ÷ 9?", options: ["7", "8", "9", "Math is a scam"], correctIndex: 2 },
-  { question: "The bill was ₹200. After 5% GST, how much do you owe?", options: ["₹205", "₹210", "₹220", "Just let him pay"], correctIndex: 1 },
+  { question: "We ordered food for a total of ₹300. After 5% GST, what is the final amount?", options: ["₹315", "₹320", "₹325", "I'll just pay 500"], correctIndex: 0 },
   { question: "What is 15 + 28?", options: ["43", "42", "44", "Somewhere between 1 and 100"], correctIndex: 0 },
   { question: "You ordered 3 dishes at ₹180 each. What's the total?", options: ["₹360", "₹540", "₹720", "Who counts when food is this good?"], correctIndex: 1 },
   { question: "What is 144 ÷ 12?", options: ["11", "12", "13", "I need a calculator for this"], correctIndex: 1 },
@@ -22,19 +22,17 @@ const questions: Question[] = [
 ];
 
 const correctMessages = [
-  "See! You're a genius! 🌟",
-  "Brilliant! I knew you had it in you! ✨",
-  "Look at you go! Mathematician of the year! 💫",
-  "Perfect! Who said you're bad at maths? 🎯",
-  "Wow, getting them all right! I'm impressed! 💛",
+  "You're not so bad after all :)",
+  "Proud of you :)",
+  "Good job :)",
+  "You're a math genius :)",
 ];
 
 const wrongMessages = [
-  "Hmm… close? Not really. But I love you anyway. 💙",
-  "That's… creative. Points for confidence! 😄",
-  "Oh no. It's okay, you have other talents! 🤗",
-  "Math isn't everything. You're still perfect. 💛",
-  "We'll pretend that didn't happen. Moving on! 😅",
+  "Hmm… try again?",
+  "Close :(",
+  "Eh it's fine, you're still great :)",
+  "Moving on!",
 ];
 
 const MathQuiz = () => {
@@ -125,8 +123,8 @@ const MathQuiz = () => {
               {score >= 8
                 ? "I'm genuinely shocked. In a good way!"
                 : score >= 5
-                ? "Not bad! We can work on the rest together."
-                : "Okay, we definitely need more chai-and-maths dates."}
+                  ? "Not bad! We can work on the rest together."
+                  : "Okay, we definitely need more chai-and-maths dates."}
             </p>
             <p className="text-gold font-display text-xl italic mt-4 mb-6">
               But honestly? You're perfect no matter what. 💛
