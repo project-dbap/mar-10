@@ -1,94 +1,130 @@
+
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, X, ZoomIn } from "lucide-react";
+import { X, ZoomIn } from "lucide-react";
 
 interface BillEntry {
   photo?: string;
+  photos?: string[];
   comment?: string;
 }
 
-interface BillPage {
-  id: number;
+interface BillCategory {
+  id: string;
   title: string;
   emoji: string;
-  subtitle?: string;
   entries: BillEntry[];
 }
 
-const pages: BillPage[] = [
+const categories: BillCategory[] = [
   {
-    id: 1,
-    title: "PFC",
-    emoji: "🍗",
-    subtitle: "Our unofficial canteen",
-    entries: Array.from({ length: 12 }, (_, i) => ({
-      photo: "/placeholder.svg",
-      ...(i === 0 ? { comment: "The usual order. Nothing fancy, everything perfect." } : {}),
-      ...(i === 3 ? { comment: "Third time this week. No regrets." } : {}),
-      ...(i === 7 ? { comment: "Birthday eve dinner." } : {}),
-    })),
-  },
-  {
-    id: 2,
-    title: "Kolkata Trip 1",
+    id: "kolkata",
+    title: "Kolkata Adventures",
     emoji: "🚂",
-    subtitle: "The first adventure",
     entries: [
-      { photo: "/placeholder.svg", comment: "That street-side roll place. Life-changing." },
-      { photo: "/placeholder.svg" },
-      { photo: "/placeholder.svg", comment: "Mishti doi after every meal." },
+      { photo: "/bills/Fabbrica-Kol1.jpg", comment: "Still sad about the rosemary :(" },
+      { photo: "/bills/BurmaBurma-Kol1.jpg", comment: "Worth every penny (except maybe the mocktail)" },
+      { photo: "/bills/MarcoPolo-Kol1.jpg", comment: "The most random dessert stop" },
+      { photo: "/bills/BurmaBurma-Kol2.jpg", comment: "So good we had to come back again" },
+      { photo: "/bills/Corridor-Kol2.jpg", comment: "The first time we exploited the happy hours" },
+      { photo: "/bills/CountryHouse-Kol2.jpg", comment: "Still not over the wafflesss" },
+      { photo: "/bills/Flurys-Kol2.jpg", comment: "What a disappointment 😭" },
+      { photo: "/bills/Mocambo-Kol2.jpg", comment: "Best one imo" },
+      { photo: "/bills/Mezzuna-14-02.jpg", comment: "Feb 14th was fun :)" },
     ],
   },
   {
-    id: 3,
-    title: "Kolkata Trip 2",
-    emoji: "🚃",
-    subtitle: "We came back for more",
+    id: "pfc",
+    title: "PFC",
+    emoji: "🥘",
     entries: [
-      { photo: "/placeholder.svg" },
-      { photo: "/placeholder.svg", comment: "Round two. Even better." },
-      { photo: "/placeholder.svg" },
+      { photo: "/bills/PFC-15-04.jpg", comment: "" },
+      { photo: "/bills/PFC-16-09.jpg" },
+      { photo: "/bills/PFC-13-10.jpg", comment: "" },
+      { photo: "/bills/PFC-26-10.jpg" },
+      { photo: "/bills/PFC-08-11.jpg" },
+      { photo: "/bills/PFC-11-11.jpg" },
+      { photo: "/bills/PFC-16-11.jpg" },
+      { photo: "/bills/PFC-18-11.jpg", comment: "" },
+      { photo: "/bills/PFC-27-11.jpg" },
+      { photo: "/bills/PFC-07-01-26.jpg" },
+      { photo: "/bills/PFC-03-02.jpg" },
+      { photo: "/bills/PFC-05-02-26.jpg" },
+      { photo: "/bills/PFC-06-02-26.jpg" },
+      { photo: "/bills/PFC-16-02-26.jpg" },
     ],
   },
   {
-    id: 4,
-    title: "Food Studio",
+    id: "fancy",
+    title: "Food Studio & Curry Room",
     emoji: "👨‍🍳",
-    subtitle: "Where we pretended to be fancy",
-    entries: Array.from({ length: 7 }, (_, i) => ({
-      photo: "/placeholder.svg",
-      ...(i === 2 ? { comment: "That dessert was unreal." } : {}),
-    })),
+    entries: [
+      { photo: "/bills/FoodStudio-14-09.jpg", comment: "How did we order this much😭" },
+      { photo: "/bills/FoodStudio-Cheesecake-12-10.jpg", comment: "Sweet treats😋" },
+      { photo: "/bills/TCR-11-10.jpg", comment: "Curry room Mushroom😋" },
+      { photo: "/bills/TCR-12-10.jpg" },
+      { photo: "/bills/TCR-15-10.jpg", comment: "" },
+      { photo: "/bills/TCR-27-10.jpg" },
+      { photo: "/bills/TCR-24-11.jpg" },
+    ],
   },
   {
-    id: 5,
-    title: "Curry Room",
-    emoji: "🍛",
-    subtitle: "Spice tolerance: tested",
-    entries: Array.from({ length: 6 }, (_, i) => ({
-      photo: "/placeholder.svg",
-      ...(i === 0 ? { comment: "You said 'medium spicy'. Liar." } : {}),
-    })),
-  },
-  {
-    id: 6,
+    id: "social",
     title: "Bombay Social",
     emoji: "🍹",
-    subtitle: "Good vibes only",
-    entries: Array.from({ length: 8 }, (_, i) => ({
-      photo: "/placeholder.svg",
-      ...(i === 4 ? { comment: "Best evening ever." } : {}),
-    })),
+    entries: [
+      { photo: "/bills/BomSoc-30-08-25.jpg", comment: "Anniversary dinner :)" },
+      { photo: "/bills/BomSoc-29-04.jpg", comment: "Last day of 4th year :(" },
+      {
+        photos: [
+          "/bills/BomSoc-17-09.jpg",
+        ],
+      },
+      { photo: "/bills/Bomsoc-06-11.jpg" },
+      { photo: "/bills/BomSoc-14-11.jpg" },
+      {
+        photos: [
+          "/bills/BomSoc-11-01-26.jpg",
+          "/bills/BomSoc-27-01-26.jpg"
+        ],
+        comment: "First time we tried dahi/sambar vadas"
+      },
+    ],
   },
   {
-    id: 7,
-    title: "Park",
-    emoji: "🌳",
-    subtitle: "Our go-to spot",
-    entries: Array.from({ length: 6 }, (_, i) => ({
-      photo: "/placeholder.svg",
-      ...(i === 1 ? { comment: "Sunday ritual." } : {}),
-    })),
+    id: "misc",
+    title: "And more..",
+    emoji: "🍴",
+    entries: [
+      {
+        photos: [
+          "/bills/C64-25-08.jpg",
+          "/bills/C64-03-09.jpg",
+          "/bills/C64-29-10-24.jpg",
+        ],
+        comment: "Some C64 meals"
+      },
+      {
+        photos: [
+          "/bills/CCD-Cheesecake-27-08.jpg",
+          "/bills/CCD-31-08.jpg",
+          "/bills/CCD-01-09.jpg",
+        ],
+        comment: "CCD sweet treats, from back when their AC was on :("
+      },
+      {
+        photos: [
+          "/bills/YellowStraw-11-01-26.jpg",
+          "/bills/YellowStraw-11-01-26-2.jpg",
+          "/bills/YellowStraw-07-02-26.jpg",
+        ],
+        comment: "Healthy for a while"
+      },
+      { photo: "/bills/BR-26-01.jpg", comment: "More sweet treats" },
+      { photo: "/bills/Keventers-14-10.jpg", comment: "Even more sweet treats" },
+      { photo: "/bills/Rynsan.jpg", comment: "Best dinner?" },
+      { photo: "/bills/GTAC-Guw.jpg", comment: "Glorified water😭" },
+    ],
   },
 ];
 
@@ -113,277 +149,268 @@ const marginDoodles = [
   { content: "∞", top: "25%", right: "3%", rotate: -8, size: "text-sm" },
 ];
 
-// Rotating sets of doodles per page
 const getPageDoodles = (pageIndex: number) => {
   const offset = pageIndex * 2;
   return marginDoodles.filter((_, i) => (i + offset) % 3 !== 0).slice(0, 5);
 };
 
-const RestaurantScrapbook = () => {
-  const [currentPage, setCurrentPage] = useState(0);
+export default function RestaurantScrapbook() {
   const [zoomedPhoto, setZoomedPhoto] = useState<string | null>(null);
-  const [direction, setDirection] = useState(0);
-  const page = pages[currentPage];
-
-  const nextPage = () => {
-    if (currentPage < pages.length - 1) {
-      setDirection(1);
-      setCurrentPage((p) => p + 1);
-    }
-  };
-  const prevPage = () => {
-    if (currentPage > 0) {
-      setDirection(-1);
-      setCurrentPage((p) => p - 1);
-    }
-  };
-
-  // 3D page-curl variants
-  const pageVariants = {
-    enter: (d: number) => ({
-      rotateY: d > 0 ? 90 : -90,
-      opacity: 0,
-      scale: 0.95,
-      transformOrigin: d > 0 ? "left center" : "right center",
-    }),
-    center: {
-      rotateY: 0,
-      opacity: 1,
-      scale: 1,
-      transformOrigin: "center center",
-    },
-    exit: (d: number) => ({
-      rotateY: d > 0 ? -90 : 90,
-      opacity: 0,
-      scale: 0.95,
-      transformOrigin: d > 0 ? "right center" : "left center",
-    }),
-  };
-
-  const doodles = getPageDoodles(currentPage);
 
   return (
-    <section className="relative z-10 py-12 px-4 md:px-8 w-full overflow-y-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="max-w-3xl mx-auto pb-24"
-      >
-        <h2 className="font-heading text-4xl md:text-5xl text-cream text-center mb-2">
+    <section className="relative z-10 py-12 px-2 w-full flex flex-col items-center">
+      <div className="text-center mb-10 z-20">
+        <h2 className="font-heading text-4xl md:text-5xl text-cream mb-2">
           The Bill Collection 🧾
         </h2>
-        <p className="text-center text-muted-foreground font-handwritten text-2xl mb-8">
-          Flip through our delicious memories
+        <p className="text-muted-foreground font-handwritten text-xl mb-4">
+          A (partial) collection of memories from the past year
         </p>
+      </div>
 
-        {/* Journal book */}
-        <div className="relative" style={{ perspective: "1200px" }}>
-          <AnimatePresence custom={direction} mode="wait">
-            <motion.div
-              key={page.id}
-              custom={direction}
-              variants={pageVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-              className="relative rounded-xl overflow-hidden"
-              style={{
-                background: "linear-gradient(145deg, hsl(36 20% 14%) 0%, hsl(30 15% 11%) 50%, hsl(220 20% 10%) 100%)",
-                border: "2px solid hsl(36 30% 25% / 0.4)",
-                boxShadow: "0 8px 40px hsl(220 50% 5% / 0.6), inset 0 1px 0 hsl(36 30% 30% / 0.2)",
-                minHeight: "500px",
-              }}
-            >
-              {/* Kraft paper texture overlay */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-[0.04] rounded-xl"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
-                  backgroundSize: "200px 200px",
-                  mixBlendMode: "overlay",
-                }}
-              />
-              {/* Secondary texture grain */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-[0.06] rounded-xl"
-                style={{
-                  backgroundImage: `radial-gradient(circle at 20% 30%, hsl(36 40% 30% / 0.15) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 70%, hsl(36 30% 25% / 0.1) 0%, transparent 50%),
-                    radial-gradient(circle at 50% 50%, hsl(30 20% 20% / 0.08) 0%, transparent 70%)`,
-                }}
-              />
+      {/* Structured Vertical Scrapbook Container */}
+      <div
+        className="relative w-full max-w-5xl rounded-2xl border border-border/30 shadow-2xl bg-secondary/10 overflow-hidden"
+        style={{
+          background: "linear-gradient(145deg, hsl(36 20% 14%) 0%, hsl(30 15% 11%) 50%, hsl(220 20% 10%) 100%)",
+          boxShadow: "inset 0 0 100px rgba(0,0,0,0.5), 0 20px 40px rgba(0,0,0,0.3)"
+        }}
+      >
+        {/* Background Textures */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.04]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+            backgroundSize: "200px 200px",
+            mixBlendMode: "overlay",
+          }}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.06]"
+          style={{
+            backgroundImage: `radial-gradient(circle at 20% 30%, hsl(36 40% 30% / 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 80% 70%, hsl(36 30% 25% / 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 50% 50%, hsl(30 20% 20% / 0.08) 0%, transparent 70%)`,
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{
+            backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, hsl(36 30% 50%) 31px, hsl(36 30% 50%) 32px)",
+            backgroundPositionY: "80px",
+          }}
+        />
+        <div
+          className="absolute left-4 md:left-12 top-0 bottom-0 w-px opacity-10 pointer-events-none"
+          style={{ background: "hsl(0 60% 50%)" }}
+        />
 
-              {/* Paper lines */}
-              <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{
-                backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, hsl(36 30% 50%) 31px, hsl(36 30% 50%) 32px)",
-                backgroundPositionY: "80px",
-              }} />
-              {/* Red margin */}
-              <div className="absolute left-12 md:left-16 top-0 bottom-0 w-px opacity-10 pointer-events-none" style={{ background: "hsl(0 60% 50%)" }} />
+        {/* Content Flow */}
+        <div className="relative p-4 md:p-12 pb-24 space-y-12 md:space-y-16">
+          {categories.map((category, catIdx) => {
+            const doodles = getPageDoodles(catIdx);
 
-              {/* Margin doodles */}
-              {doodles.map((doodle, i) => (
-                <motion.span
-                  key={`${currentPage}-doodle-${i}`}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
-                  className={`absolute ${doodle.size} text-primary/15 select-none pointer-events-none font-handwritten`}
-                  style={{
-                    top: doodle.top,
-                    left: doodle.left,
-                    right: doodle.right,
-                    bottom: doodle.bottom,
-                    transform: `rotate(${doodle.rotate}deg)`,
-                  }}
-                >
-                  {doodle.content}
-                </motion.span>
-              ))}
+            return (
+              <div key={category.id} className="relative pt-6">
+                {/* Category Margin doodles */}
+                {doodles.map((doodle, i) => (
+                  <span
+                    key={`doodle-${catIdx}-${i}`}
+                    className={`absolute hidden md:block ${doodle.size} text-primary/15 select-none pointer-events-none font-handwritten`}
+                    style={{
+                      top: doodle.top,
+                      left: doodle.left,
+                      right: doodle.right,
+                      bottom: doodle.bottom,
+                      transform: `rotate(${doodle.rotate}deg)`,
+                    }}
+                  >
+                    {doodle.content}
+                  </span>
+                ))}
 
-              <div className="relative p-5 md:p-8">
-                {/* Page number */}
-                <div className="absolute top-4 right-5 text-muted-foreground/30 font-handwritten text-sm">
-                  pg {currentPage + 1} / {pages.length}
-                </div>
-
-                {/* Title */}
-                <div className="text-center mb-6 pt-2">
-                  <span className="text-4xl mb-1 block">{page.emoji}</span>
-                  <h3 className="font-handwritten text-4xl md:text-5xl text-cream">
-                    {page.title}
+                {/* Section Title */}
+                <div className="text-center mb-10 relative z-10">
+                  <span className="text-5xl mb-4 block drop-shadow-md">{category.emoji}</span>
+                  <h3 className="font-handwritten text-4xl md:text-5xl text-cream drop-shadow-sm">
+                    {category.title}
                   </h3>
-                  {page.subtitle && (
-                    <p className="font-handwritten text-lg text-primary/60 mt-1">
-                      — {page.subtitle} —
+                  {category.subtitle && (
+                    <p className="font-handwritten text-xl text-primary/60 mt-3">
+                      — {category.subtitle} —
                     </p>
                   )}
-                  <div className="text-primary/20 text-xs mt-2 select-none font-handwritten">~ ~ ~ ✿ ~ ~ ~</div>
+                  <div className="text-primary/20 text-sm mt-5 select-none font-handwritten">
+                    ~ ~ ~ ✿ ~ ~ ~
+                  </div>
                 </div>
 
-                {/* Bills grid */}
-                <div className="grid grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
-                  {page.entries.map((entry, ei) => {
-                    const tapeColor = tapeColors[(currentPage + ei) % tapeColors.length];
-                    const tilt = ((ei % 5) - 2) * 1.5;
+                {/* Bills Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 px-2 md:px-6 relative z-10 grid-flow-row-dense items-start">
+                  {category.entries.map((entry, ei) => {
+                    const tapeColor = tapeColors[(catIdx + ei) % tapeColors.length];
+
+                    // --- CONFIGURABLE MESSINESS ---
+                    // 0 = stick straight, perfect grid
+                    // 1 = natural slight scatter
+                    // 2+ = very messy/chaotic scrapbook
+                    const MESSINESS_LEVEL = 0.3;
+
+                    // Generate a more pronounced, "messy" rotation and offset
+                    // using a pseudo-random but consistent calculation based on index
+                    const pseudoRandom = Math.sin(ei * 1234.5);
+                    const tilt = pseudoRandom * (12 * MESSINESS_LEVEL); // random tilt
+                    const yOffset = Math.sin(ei * 4321) * (35 * MESSINESS_LEVEL); // random vertical offset
+                    const xOffset = Math.cos(ei * 987) * (20 * MESSINESS_LEVEL); // random horizontal offset
+
+                    // Stagger the vertical flow based on messiness
+                    const mtClass = MESSINESS_LEVEL > 0.8
+                      ? (ei % 3 === 0 ? "mt-0" : ei % 3 === 1 ? "mt-12" : "mt-24")
+                      : (ei % 2 === 0 ? "mt-2" : "mt-0");
+
+                    // Handle single photo or grouped photos
+                    const displayPhotos = entry.photos || (entry.photo ? [entry.photo] : []);
+                    const isGroup = displayPhotos.length > 1;
+
+                    // Calculate how many columns this polaroid should span
+                    const spanClass =
+                      displayPhotos.length === 1 ? 'col-span-1' :
+                        displayPhotos.length === 2 ? 'col-span-2' :
+                          displayPhotos.length === 3 ? 'col-span-2 md:col-span-3' :
+                            'col-span-2 md:col-span-4 lg:col-span-4'; // cap at max columns
 
                     return (
                       <motion.div
                         key={ei}
-                        initial={{ opacity: 0, y: 15, rotate: 0 }}
-                        animate={{ opacity: 1, y: 0, rotate: tilt }}
-                        whileHover={{ rotate: 0, scale: 1.05, zIndex: 20 }}
-                        transition={{ delay: ei * 0.04, duration: 0.3 }}
-                        className="relative group cursor-pointer"
-                        onClick={() => entry.photo && setZoomedPhoto(entry.photo)}
+                        initial={{ opacity: 0, y: yOffset + 30, x: xOffset, rotate: tilt }}
+                        whileInView={{ opacity: 1, y: yOffset, x: xOffset, rotate: tilt }}
+                        viewport={{ once: true, margin: "-50px" }}
+                        className={`relative group cursor-pointer mb-12 ${spanClass} ${mtClass}`}
                       >
                         {/* Tape */}
                         <div
-                          className={`absolute -top-1.5 left-1/2 -translate-x-1/2 w-10 h-3 ${tapeColor} rounded-sm z-10`}
-                          style={{ transform: `translateX(-50%) rotate(${-tilt * 0.3}deg)` }}
+                          className={`absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-4 ${tapeColor} rounded-sm z-10 shadow-sm backdrop-blur-sm bg-opacity-80`}
+                          style={{ transform: `translateX(-50%) rotate(${-tilt * 0.5}deg)` }}
                         />
 
-                        {/* Bill photo */}
-                        <div className="w-full aspect-[2/3] rounded-sm overflow-hidden border border-border/20 shadow-md bg-secondary/30 relative">
-                          {entry.photo ? (
-                            <>
-                              <img src={entry.photo} alt="bill" className="w-full h-full object-cover" />
-                              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                <ZoomIn className="w-5 h-5 text-white opacity-0 group-hover:opacity-80 transition-opacity" />
+                        {/* Polaroid Frame */}
+                        <div className="bg-white/90 p-3 pt-4 pb-12 shadow-md hover:shadow-xl transition-shadow rounded-sm border border-black/10 relative">
+
+                          {/* Inner Photo Layout */}
+                          <div
+                            className={`w-full rounded-sm bg-black relative shadow-inner grid gap-2 ${isGroup ? 'p-2' : ''} ${displayPhotos.length === 1 ? 'grid-cols-1' :
+                              displayPhotos.length === 2 ? 'grid-cols-2' :
+                                displayPhotos.length === 3 ? 'grid-cols-2 md:grid-cols-3' :
+                                  'grid-cols-2 md:grid-cols-4 lg:grid-cols-4'
+                              }`}
+                          >
+                            {displayPhotos.length > 0 ? (
+                              displayPhotos.map((photoSrc, photoIdx) => (
+                                <div
+                                  key={photoIdx}
+                                  className="relative group/photo"
+                                  onClick={() => setZoomedPhoto(photoSrc)}
+                                >
+                                  <img
+                                    src={photoSrc}
+                                    alt="Bill"
+                                    loading="lazy"
+                                    className="w-full h-full object-cover border border-white/10"
+                                  />
+                                  <div className="absolute inset-0 bg-black/0 group-hover/photo:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover/photo:opacity-100 cursor-zoom-in">
+                                    <ZoomIn className="w-8 h-8 text-white drop-shadow-lg" />
+                                  </div>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="w-full aspect-[2/3] flex items-center justify-center">
+                                <span className="text-muted-foreground/30 text-xs font-body">📄</span>
                               </div>
-                            </>
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <span className="text-muted-foreground/30 text-xs font-body">📄</span>
+                            )}
+                          </div>
+
+                          {/* Comment area */}
+                          {entry.comment && (
+                            <div className="absolute bottom-3 left-0 right-0 px-3 text-center">
+                              <p className="font-handwritten text-sm text-black/80 leading-tight">
+                                {entry.comment}
+                              </p>
                             </div>
                           )}
                         </div>
-
-                        {/* Comment */}
-                        {entry.comment && (
-                          <p className="font-handwritten text-sm md:text-base text-cream/60 mt-1.5 leading-snug text-center px-0.5">
-                            "{entry.comment}"
-                          </p>
-                        )}
                       </motion.div>
                     );
                   })}
-                </div>
 
-                {/* Bottom flourish */}
-                <div className="text-center mt-6 text-primary/15 text-sm select-none font-handwritten">
-                  ── ♡ ──
                 </div>
               </div>
-            </motion.div>
-          </AnimatePresence>
+            );
+          })}
+        </div>
 
-          {/* Page controls */}
-          <div className="flex items-center justify-between mt-6 px-2">
-            <button
-              onClick={prevPage}
-              disabled={currentPage === 0}
-              className="flex items-center gap-1 text-sm font-handwritten text-lg text-muted-foreground hover:text-cream disabled:opacity-20 disabled:cursor-default transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              prev
-            </button>
-            <div className="flex gap-1.5">
-              {pages.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => {
-                    setDirection(i > currentPage ? 1 : -1);
-                    setCurrentPage(i);
-                  }}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    i === currentPage ? "bg-primary w-4" : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                  }`}
-                />
-              ))}
-            </div>
-            <button
-              onClick={nextPage}
-              disabled={currentPage === pages.length - 1}
-              className="flex items-center gap-1 text-sm font-handwritten text-lg text-muted-foreground hover:text-cream disabled:opacity-20 disabled:cursor-default transition-colors"
-            >
-              next
-              <ChevronRight className="w-4 h-4" />
-            </button>
+        {/* Scrapbook Footer */}
+        <div className="mt-12 mb-20 text-center px-4">
+          <p className="font-handwritten text-xl md:text-2xl text-primary/70 italic mb-12">
+            And many more missing bills and memories :(
+          </p>
+
+          {/* Stats Section */}
+          <div className="max-w-sm mx-auto bg-white/90 border border-black/10 p-6 rounded-sm shadow-sm rotate-1 font-handwritten text-left relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 bg-yellow-400/80 rounded-sm z-10 shadow-sm backdrop-blur-sm -rotate-2" />
+            <h4 className="text-xl border-b border-black/10 pb-2 mb-3 font-bold text-black/80 text-center">
+              Quick Stats
+            </h4>
+            <ul className="space-y-4 text-lg text-black/80">
+              <li className="flex justify-between items-end border-b border-black/5 pb-1 gap-4">
+                <span>Paneer Eaten:</span>
+                <span className="font-bold">Too much</span>
+              </li>
+              <li className="flex justify-between items-end border-b border-black/5 pb-1 gap-4">
+                <span>Total Cost:</span>
+                <span className="font-bold">Let's not go there</span>
+              </li>
+              <li className="flex justify-between items-end border-b border-black/5 pb-1 gap-4">
+                <span>Calories Gained:</span>
+                <span className="font-bold line-through decoration-2">Classified</span>
+              </li>
+              <li className="flex justify-between items-end pb-1 gap-4">
+                <span>Goss Discussed:</span>
+                <span className="font-bold text-black">Countless</span>
+              </li>
+            </ul>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Lightbox / Zoom overlay */}
+      {/* Lightbox Overlay */}
       <AnimatePresence>
         {zoomedPhoto && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-6"
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex items-center justify-center p-4 md:p-12 cursor-zoom-out"
             onClick={() => setZoomedPhoto(null)}
           >
             <motion.div
-              initial={{ scale: 0.7, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.7, opacity: 0 }}
-              transition={{ type: "spring", damping: 25 }}
-              className="relative max-w-sm w-full max-h-[85vh]"
+              initial={{ scale: 0.9, y: 10, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative max-w-2xl w-full max-h-[90vh] flex flex-col items-center cursor-default"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setZoomedPhoto(null)}
-                className="absolute -top-10 right-0 text-white/70 hover:text-white transition-colors"
+                className="absolute -top-12 right-0 text-white/50 hover:text-white transition-colors bg-white/10 hover:bg-white/20 rounded-full p-2"
               >
                 <X className="w-6 h-6" />
               </button>
+
               <img
                 src={zoomedPhoto}
                 alt="Bill zoomed"
-                className="w-full h-auto max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                className="w-full h-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
               />
             </motion.div>
           </motion.div>
@@ -393,4 +420,4 @@ const RestaurantScrapbook = () => {
   );
 };
 
-export default RestaurantScrapbook;
+

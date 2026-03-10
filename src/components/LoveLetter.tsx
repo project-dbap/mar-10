@@ -9,7 +9,7 @@ const LoveLetter = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 1 }}
-        className="max-w-2xl mx-auto"
+        className="max-w-4xl mx-auto"
       >
         <div className="text-center mb-10">
           <Heart className="w-8 h-8 text-gold mx-auto mb-4" />
@@ -19,40 +19,51 @@ const LoveLetter = () => {
         </div>
 
         <div className="love-letter rounded-2xl p-8 md:p-12">
-          <p className="font-display text-2xl md:text-3xl text-gold mb-8 italic">
-            My dearest Bhagirathi,
+          <p className="font-heading text-2xl md:text-3xl text-gold mb-8">
+            To my Spidergirl,
           </p>
 
-          <div className="space-y-6 font-display text-lg md:text-xl text-cream/85 leading-relaxed italic">
+          <div className="space-y-6 font-heading text-lg md:text-xl text-cream/85 leading-relaxed">
             <p>
-              I don't know how to say everything I feel about you in just a few lines,
-              but I'll try — because you deserve to hear it, and I'll never get tired of telling you.
+              You of all people would know that I suck at this, but here's my attempt at a few words to you. (And don't worry, I'm not using Gemini 😤)
             </p>
 
             <p>
-              You make the ordinary feel extraordinary. A simple meal becomes a memory.
-              A random evening becomes the highlight of my week. A conversation with you
-              feels like the only place I ever want to be.
+              You are one of the smartest people I know. The way you're able to analyze and come up with conclusions even with limited knowledge, it's lowkey terrifying (ngl I'm kinda attracted to it too hehe).
+              No wonder you're so good at research too. <br></br>
+              I wish someday that I will be able to match your goss-finding and analyzing skills, but until then, I will just admire it and provide my observations from time-to-time 😘
             </p>
 
             <p>
-              Thank you for being patient with me, for laughing at my terrible jokes,
-              for making even the most mundane days feel like they matter.
-              I'm so lucky you exist, and I'm even luckier that you chose me.
+              You wonder how I can sit without doing anything, but I'm just sitting there lost in your eyes, your adorable baby eyes.
+              <br></br>When I used to give you such compliments, you just replied "boring" 😭, if only you could see how I see you (is this grammatically right? 😣), and if only I could express it in better words.
             </p>
 
             <p>
-              Happy Birthday, my love. Here's to many more restaurants, many more bills,
-              and many, many more terrible maths scores from you.
+              I wish I could atleast be half as passionate about anything as you are about food. It is so fascinating to see you describe something as simple as even green chutney in such detail <s>whereas here I'm struggling to find words to even describe you</s>.
+              I hope to explore so many more restaurants and dishes with you (maybe even cook for each other? 😇)
+            </p>
+
+            <p>
+              You are such a sweet soul, so nice with people. Yes, you might be rude to me at times, but I cope knowing that that means you're comfortable enough to be your true self around me (right? 🥺)
+            </p>
+
+            <p>
+              Thank you for being so patient with me, tolerating my fuck-ups and tomfooleries. Sometimes I still wonder why you chose to date me, and how you've stuck around for so long <s>and then I remember my height</s>.
+              I know we're not at the greatest point right now, but I hope to be better.
+            </p>
+
+            <p>
+              Happy Birthday baby. Finally after 6 months, we can again say that we have a 1 year age gap between us (true mo**y).  Here's to many more birthdays together (and maybe a vibe-rator gift for one of them hehe)
             </p>
           </div>
 
           <div className="mt-10 pt-6 border-t border-gold/20">
-            <p className="font-display text-xl text-gold italic text-right">
+            <p className="font-heading text-xl text-gold text-right">
               Forever yours,
             </p>
-            <p className="font-display text-2xl text-gold italic text-right mt-2">
-              — Your Person 💛
+            <p className="font-heading text-2xl text-gold text-right mt-2">
+              Asha
             </p>
           </div>
         </div>
