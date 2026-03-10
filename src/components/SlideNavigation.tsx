@@ -47,9 +47,9 @@ const SlideNavigation = ({ slides }: SlideNavigationProps) => {
     const onEnd = (e: TouchEvent) => {
       const dy = startY - e.changedTouches[0].clientY;
       const dx = startX - e.changedTouches[0].clientX;
-      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 50) {
-        dy > 0 ? next() : prev();
-      } else if (Math.abs(dx) > 50) {
+
+      // Only navigate on horizontal swipes that are stronger than vertical movement
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
         dx > 0 ? next() : prev();
       }
     };
@@ -95,11 +95,10 @@ const SlideNavigation = ({ slides }: SlideNavigationProps) => {
             aria-label={`Go to ${slide.label}`}
           >
             <span
-              className={`block rounded-full transition-all duration-300 ${
-                i === current
+              className={`block rounded-full transition-all duration-300 ${i === current
                   ? "w-8 h-2 bg-primary"
                   : "w-2 h-2 bg-muted-foreground/40 hover:bg-muted-foreground/70"
-              }`}
+                }`}
             />
             <span className="absolute -top-8 whitespace-nowrap text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity bg-card px-2 py-1 rounded">
               {slide.label}
