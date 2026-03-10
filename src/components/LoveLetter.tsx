@@ -40,7 +40,7 @@ const LoveLetter = () => {
             </p>
 
             <p>
-              I wish I could atleast be half as passionate about anything as you are about food. It is so fascinating to see you describe something as simple as even green chutney in such detail <s>whereas here I'm struggling to find words to even describe you</s>.
+              I wish I could atleast be half as passionate about anything as you are about food. (although you've been eating kinda less lately, but I'll fix that 😤) It's so fascinating to hear you describe something as simple as even green chutney in such detail <s>whereas here I'm struggling to find words to even describe you</s>.
               I hope to explore so many more restaurants and dishes with you (maybe even cook for each other? 😇)
             </p>
 
@@ -59,11 +59,8 @@ const LoveLetter = () => {
           </div>
 
           <div className="mt-10 pt-6 border-t border-gold/20">
-            <p className="font-heading text-xl text-gold text-right">
-              Forever yours,
-            </p>
             <p className="font-heading text-2xl text-gold text-right mt-2">
-              Asha
+              ~ Asha
             </p>
           </div>
         </div>
