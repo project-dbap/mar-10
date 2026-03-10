@@ -312,7 +312,7 @@ export default function RestaurantScrapbook() {
                                   onClick={() => setZoomedPhoto(photoSrc)}
                                 >
                                   <img
-                                    src={photoSrc}
+                                    src={`${import.meta.env.BASE_URL}${photoSrc.startsWith('/') ? photoSrc.slice(1) : photoSrc}`}
                                     alt="Bill"
                                     loading="lazy"
                                     className="w-full h-full object-cover border border-white/10"
@@ -408,7 +408,7 @@ export default function RestaurantScrapbook() {
               </button>
 
               <img
-                src={zoomedPhoto}
+                src={`${import.meta.env.BASE_URL}${zoomedPhoto.startsWith('/') ? zoomedPhoto.slice(1) : zoomedPhoto}`}
                 alt="Bill zoomed"
                 className="w-full h-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
               />
